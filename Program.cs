@@ -128,7 +128,36 @@ class Program
             }
 
             // command "filter" by Title
-            
+            if (command.StartsWith("filter"))
+            {
+                string[] todoParams = command.Split(" ");
+                if (todoParams.Length <= 1)
+                {
+                    Console.WriteLine("USAGE: filter <title>");
+                    continue;
+                }
+
+                string filterTitle = todoParams[1];
+                var filteredTodos = todoList.Where(t => t.Title.Contains(filterTitle, StringComparison.OrdinalIgnoreCase)).ToList();
+
+                if (filteredTodos.Count <= 0)
+                {
+                    Console.WriteLine($"No todos found with title containing '{filterTitle}'");
+                }
+                else
+                {
+                    foreach (var todo in filteredTodos)
+                    {
+                        Console.WriteLine("---------------------------------------------------------------------\n");
+                        Console.WriteLine($"Id: {todo.Id}\nTitle: {todo.Title}\nDescription: {todo.Description}");
+                        if (todo.DueDate != null)
+                        {
+                            Console.WriteLine($"Due Date: {todo.DueDate}");
+                        }
+                        Console.WriteLine($"");
+                    }
+                }
+            }
 
 
             Console.WriteLine("Your command: {0}", command);
