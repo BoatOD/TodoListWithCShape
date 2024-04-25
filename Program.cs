@@ -80,50 +80,48 @@ class Program
                 }
 
                 string[] todoParams = command.Split(" ");
-                if (todoParams.Count() == 1)
+                if (todoParams.Count() <= 1)
                 {
                     Console.WriteLine("Please Enter id to remove like: remove <Todo-Id>");
                     continue;
                 }
 
                 Boolean hasData = false;
-                for (int i = 0; i < todoList.Count; i++)
-                {
-                    if (todoList[i].Id.ToString() == todoParams[1])
-                    {
-                        Console.WriteLine("---------------------------------------------------------------------\n");
-                        Console.WriteLine("This is your todo That you want to remove.");
-                        Console.WriteLine($"Id: {todoList[i].Id}\nTitle: {todoList[i].Title}\nDescription: {todoList[i].Description}");
-                        if (todoList[i].DueDate != null)
-                        {
-                            Console.WriteLine($"Due Date: {todoList[i].DueDate}");
-                        }
-                        Console.WriteLine("Confirm to remove by pass [y/n]");
-                        while (true)
-                        {
-                            string comfirm = Console.ReadLine();
-                            if (string.IsNullOrEmpty(comfirm))
-                            {
-                                Console.WriteLine("Please enter your confirmation. [y/n]");
-                                continue;
-                            } else if (comfirm.ToLower() == "y")
-                            {
-                                todoList.RemoveAt(i);
-                                hasData = true;
-                                Console.WriteLine("Remove Succeed");
-                                break;
-                            } else
-                            {
-                                hasData = true;
-                                break;
-                            }
-                        }
-                    }
-                }
 
-                if (!hasData)
+                var dataToRemove = todoList.Where(t => t.Id.ToString().Contains(todoParams[1], StringComparison.OrdinalIgnoreCase)).ToList();
+
+                if (dataToRemove.Count() <= 0)
                 {
                     Console.WriteLine("Sorry you don't have this todo id in your list. Please check id and try again.");
+                    continue;
+                } else
+                {
+                    Console.WriteLine("---------------------------------------------------------------------\n\nThis is your todo That you want to remove.");
+                    Console.WriteLine($"Id: {dataToRemove[0].Id}\nTitle: {dataToRemove[0].Title}\nDescription: {dataToRemove[0].Description} {0}");
+                    if (dataToRemove[0].DueDate != null)
+                    {
+                        Console.WriteLine($"Due Date: {dataToRemove[0].DueDate}");
+                    }
+                    Console.WriteLine("---------------------------------------------------------------------\n\nConfirm to remove by pass [y/n]");
+                    while (true)
+                    {
+                        string comfirm = Console.ReadLine();
+                        if (string.IsNullOrEmpty(comfirm))
+                        {
+                            Console.WriteLine("Please enter your confirmation. [y/n]");
+                            continue;
+                        }
+                        else if (comfirm.ToLower() == "y")
+                        {
+                            todoList.Remove(dataToRemove[0]);
+                            Console.WriteLine("Remove Succeed");
+                            break;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
                 }
             }
 
