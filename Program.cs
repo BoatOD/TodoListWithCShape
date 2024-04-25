@@ -123,12 +123,12 @@ class Program
 
                 if (!hasData)
                 {
-                    Console.WriteLine("Sorry you don't this todo in your list. Please check id and try again.");
+                    Console.WriteLine("Sorry you don't have this todo id in your list. Please check id and try again.");
                 }
             }
 
             // command "filter" by Title
-
+            
 
 
             Console.WriteLine("Your command: {0}", command);
