@@ -53,27 +53,82 @@ class Program
             // command "list"
             if (command.StartsWith("list"))
             {
-                string[] todoParams = command.Split(" ");
-                if (todoParams.Length <= 1)
+                if (todoList.Count <= 0)
                 {
-                    Console.WriteLine($"USAGE: create <todo-name> [<todo-description>] [<todo-due-date>]");
+                    Console.WriteLine("You don't have any todo.");
                     continue;
                 }
-
-                DateTime dueDate = default;
-                bool hasDueDate = todoParams.Length == 4 && DateTime.TryParse(todoParams[3], out dueDate);
-                DateTime? dueDateParam = hasDueDate ? dueDate : null;
-
-                var newEntry = new TodoEntry(todoParams![1], (todoParams.Length >= 3 ? todoParams[2] : null), dueDateParam);
-                todoList.Add(newEntry);
-
-                string dueDateMessage = hasDueDate ? $"(Due date: {dueDateParam})" : "";
-                Console.WriteLine($"Added '{newEntry.Title}' to Todo List {dueDateMessage}");
+                foreach ( var todo in todoList )
+                {
+                    Console.WriteLine("---------------------------------------------------------------------\n");
+                    Console.WriteLine($"Id: {todo.Id}\nTitle: {todo.Title}\nDescription: {todo.Description}");
+                    if ( todo.DueDate != null )
+                    {
+                        Console.WriteLine($"Due Date: {todo.DueDate}");
+                    }
+                    Console.WriteLine($"");
+                }
             }
 
             // command "remove" by Guid
+            if (command.StartsWith("remove"))
+            {
+                if (todoList.Count <= 0)
+                {
+                    Console.WriteLine("You don't have any todo to remove.");
+                    continue;
+                }
+
+                string[] todoParams = command.Split(" ");
+                if (todoParams.Count() == 1)
+                {
+                    Console.WriteLine("Please Enter id to remove like: remove <Todo-Id>");
+                    continue;
+                }
+
+                Boolean hasData = false;
+                for (int i = 0; i < todoList.Count; i++)
+                {
+                    if (todoList[i].Id.ToString() == todoParams[1])
+                    {
+                        Console.WriteLine("---------------------------------------------------------------------\n");
+                        Console.WriteLine("This is your todo That you want to remove.");
+                        Console.WriteLine($"Id: {todoList[i].Id}\nTitle: {todoList[i].Title}\nDescription: {todoList[i].Description}");
+                        if (todoList[i].DueDate != null)
+                        {
+                            Console.WriteLine($"Due Date: {todoList[i].DueDate}");
+                        }
+                        Console.WriteLine("Confirm to remove by pass [y/n]");
+                        while (true)
+                        {
+                            string comfirm = Console.ReadLine();
+                            if (string.IsNullOrEmpty(comfirm))
+                            {
+                                Console.WriteLine("Please enter your confirmation. [y/n]");
+                                continue;
+                            } else if (comfirm.ToLower() == "y")
+                            {
+                                todoList.RemoveAt(i);
+                                hasData = true;
+                                Console.WriteLine("Remove Succeed");
+                                break;
+                            } else
+                            {
+                                hasData = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (!hasData)
+                {
+                    Console.WriteLine("Sorry you don't this todo in your list. Please check id and try again.");
+                }
+            }
 
             // command "filter" by Title
+
 
 
             Console.WriteLine("Your command: {0}", command);
